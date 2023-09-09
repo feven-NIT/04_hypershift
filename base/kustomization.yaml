@@ -1,0 +1,14 @@
+resources:
+- customer_01/hostedcluster.yaml
+- customer_01/hypershiftdeployment.yaml
+- customer_01/klusterletaddonconfig.yaml
+- customer_01/managedcluster.yaml
+- customer_01/nodepool.yaml
+- customer_01/secrets.yaml
+- customer_02/hostedcluster.yaml
+- customer_02/hypershiftdeployment.yaml
+- customer_02/klusterletaddonconfig.yaml
+- customer_02/managedcluster.yaml
+- customer_02/nodepool.yaml
+- customer_02/secrets.yaml
+

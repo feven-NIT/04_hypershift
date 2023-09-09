@@ -1,0 +1,64 @@
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: HypershiftDeployment
+metadata:
+  name: cust-01
+  namespace: clusters
+spec:
+  hostingCluster: local-cluster
+  hostingNamespace: cust-01
+  hostedClusterSpec:
+    networking:
+      machineCIDR: 10.6.82.0/24
+      networkType: OVNKubernetes
+      podCIDR: 10.132.0.0/14
+      serviceCIDR: 172.31.0.0/16
+    platform:
+      type: Agent
+      agent:
+        agentNamespace: baremetal
+    pullSecret:
+      name: cluster-cust-01-pullsecret
+    release:
+      image: quay.io/openshift-release-dev/ocp-release:4.13.5-x86_64
+    dns:
+      baseDomain: hcp.numspot.cloud
+    controllerAvailabilityPolicy: SingleReplica
+    infrastructureAvailabilityPolicy: SingleReplica
+    services:
+    - service: APIServer
+      servicePublishingStrategy:
+        nodePort:
+          address: 10.6.82.55
+        type: NodePort
+    - service: OAuthServer
+      servicePublishingStrategy:
+        type: Route
+    - service: Konnectivity
+      servicePublishingStrategy:
+        type: Route
+    - service: Ignition
+      servicePublishingStrategy:
+        type: Route
+    sshKey:
+      name: cluster-hycl1-sshkey
+  nodePools:
+  - name: cust-01-pool-1
+    spec:
+      clusterName: cust-01
+      management:
+        autoRepair: false
+        replace:
+          rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+          strategy: RollingUpdate
+        upgradeType: InPlace
+      platform:
+        agent:
+          agentLabelSelector: {}
+        type: Agent
+      release:
+        image: quay.io/openshift-release-dev/ocp-release:4.13.5-x86_64
+      replicas: 2
+  infrastructure:
+    configure: False
